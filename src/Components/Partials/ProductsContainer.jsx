@@ -1,84 +1,90 @@
 import React from "react";
 import { Link } from "react-router-dom";
 
-
 export default function ProductsContainer({ title, data }) {
   return (
     <>
-      {/* <!-- Service Start --> */}
-      <div className="container-fluid service py-5">
+      {/* Products Start */}
+      <div className="container-fluid py-5 bg-light">
         <div className="container py-5">
           <div
             className="text-center mx-auto pb-5 wow fadeInUp"
-            data-wow-delay="0.2s"
             style={{ maxWidth: "800px" }}
           >
-            <h4 className="text-primary">{title}</h4>
-            <p className="mb-0">
-              Lorem ipsum dolor, sit amet consectetur adipisicing elit. Tenetur
-              adipisci facilis cupiditate recusandae aperiam temporibus corporis
-              itaque quis facere, numquam, ad culpa deserunt sint dolorem autem
-              obcaecati, ipsam mollitia hic.
+            <h2 className="fw-bold mb-3">{title}</h2>
+            <p className="text-muted mb-0">
+              Discover premium products with the best quality and pricing.
             </p>
           </div>
-          <div className="row g-4 justify-content-center">
-            {data?.map((item, index) => {
-              return (
-                <div
-                  className="col-md-6 col-lg-6 col-xl-3 wow fadeInUp"
-                  data-wow-delay="0.2s"
-                  key={index}
-                >
-                  <div className="service-item">
-                    <div className="service-img">
-                      <img
-                        src={item.pic[0]}
-                        style={{height:250}}
-                        className="img-fluid rounded-top w-100"
-                        alt="Product image"
-                      />
-                      <div className="service-icon p-3">
-                        <i className="fa">
-                            {item.brand}
-                        </i>
-                      </div>
-                    </div>
-                    <div className="service-content p-4">
-                      <div className="service-content-inner">
-                        <Link to={`/product/${item.id}`} className="d-inline-block h4 mb-4">
-                          {item.name}
-                        </Link>
-                        <p className="mb-4">
-                          {item.stock?"In Stock":"Out of Stock"} {item.stock?`/${item.quantity} Left in Stock`:""}
-                        </p>
-                        <p className="mb-4">
-                          <del>&#8377;{item.basePrice}</del> &#8377;{item.finalPrice} <sup>{item.discount}%off</sup>
-                        </p>
-                        <Link
-                          className="btn btn-primary rounded-pill py-2 px-4 w-100"
-                          to={`/product/${item.id}`}
-                        >
-                          Add to Cart
-                        </Link>
-                      </div>
-                    </div>
+
+          <div className="row g-4">
+            {data?.map((item, index) => (
+              <div
+                className="col-md-6 col-lg-4 col-xl-3 wow fadeInUp"
+                key={index}
+              >
+                <div className="product-card h-100">
+                  <div className="product-img">
+                    <img
+                      src={item.pic[0]}
+                      className="img-fluid w-100"
+                      alt={item.name}
+                    />
+                    <span className="badge bg-primary product-brand">
+                      {item.brand}
+                    </span>
+                  </div>
+
+                  <div className="product-body p-4">
+                    <Link
+                      to={`/product/${item.id}`}
+                      className="product-title"
+                    >
+                      {item.name}
+                    </Link>
+
+                    <p
+                      className={`small mb-2 ${
+                        item.stock ? "text-success" : "text-danger"
+                      }`}
+                    >
+                      {item.stock
+                        ? `In Stock · ${item.quantity} left`
+                        : "Out of Stock"}
+                    </p>
+
+                    <p className="mb-3">
+                      <del className="text-muted me-2">
+                        ₹{item.basePrice}
+                      </del>
+                      <span className="fw-bold fs-5">
+                        ₹{item.finalPrice}
+                      </span>
+                      <span className="text-success small ms-2">
+                        {item.discount}% off
+                      </span>
+                    </p>
+
+                    <Link
+                      to={`/product/${item.id}`}
+                      className="btn btn-primary rounded-pill w-100"
+                    >
+                      Add to Cart
+                    </Link>
                   </div>
                 </div>
-              );
-            })}
+              </div>
+            ))}
 
-            <div
-              className="col-12 text-center wow fadeInUp"
-              data-wow-delay="0.2s"
-            >
-              <a className="btn btn-primary rounded-pill py-3 px-5" href="#">
-                More Services
+            <div className="col-12 text-center mt-4">
+              <a className="btn btn-outline-primary rounded-pill px-5 py-3">
+                View More
               </a>
             </div>
           </div>
         </div>
       </div>
-      {/* <!-- Service End --> */}
+      {/* Products End */}
     </>
   );
 }
