@@ -20,6 +20,10 @@ html {
     display: none;
 }
 
+.search-input{
+    border-radius: 10px 0 0 10px;
+}
+
 #spinner {
     opacity: 0;
     visibility: hidden;
