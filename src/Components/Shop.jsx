@@ -8,7 +8,7 @@ import { getProduct } from "../Redux/Actioncreators/ProductActionCreate";
 import { getMaincategory } from "../Redux/Actioncreators/MaincategoryActionCreate";
 import { getBrand } from "../Redux/Actioncreators/BrandActionCreate";
 import { getSubcategory } from "../Redux/Actioncreators/SubcategoryActionCreate";
-import { Link } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 
 export default function Shop() {
   let [products, setProducts] = useState([]);
@@ -20,6 +20,9 @@ export default function Shop() {
   let [sc, setSc] = useState("All");
   let [br, setBr] = useState("All");
 
+  let location = useLocation();
+  const safe = (v) => encodeURIComponent(v);
+
   let dispatch = useDispatch();
   let ProductStateData = useSelector((state) => state.ProductStateData);
   let MaincategoryStateData = useSelector(
@@ -28,12 +31,27 @@ export default function Shop() {
   let SubcategoryStateData = useSelector((state) => state.SubcategoryStateData);
   let BrandStateData = useSelector((state) => state.BrandStateData);
 
+  function filterData(mc,sc,br){
+      let data = [] 
+      if(mc==="All" && sc==="All" && br==="All")
+        data = ProductStateData
+      else if (!mc==="All" && sc==="All" && br==="All")
+        data = ProductStateData.filter(x=>x.maincategory===mc)
+  }
+
   useEffect(() => {
     (() => {
       dispatch(getProduct());
-      if (ProductStateData.length) setProducts(ProductStateData);
     })();
   }, [ProductStateData.length]);
+
+  useEffect(()=>{
+    const query = new URLSearchParams(location.search)
+    setMc(query.get("mc")??"All")
+    setSc(query.get("sc")??"All")
+    setBr(query.get("br")??"All")
+    // console.log(query.get("mc"),query.get("sc"),query.get("br"))
+  },[location])
 
   useEffect(() => {
     (() => {
@@ -70,13 +88,13 @@ export default function Shop() {
               >
                 Maincategory
               </p>
-              <a className="list-group-item list-group-item-action">
+              <Link to={`/shop?mc=All&sc=${sc}&br=${br}`} className="list-group-item list-group-item-action">
                 All
-              </a>
+              </Link>
               {
                 maincategory.map((item,index)=>{
                   if(item.active)
-                  return <Link to={`/shop?mc=All&sc`} key={index} class="list-group-item list-group-item-action">
+                  return <Link to={`/shop?mc=${item.name}&sc=${sc}&br=${br}`} key={index} className="list-group-item list-group-item-action">
                   {item.name}
                 </Link>
                 })
@@ -90,15 +108,15 @@ export default function Shop() {
               >
                 Subcategory
               </p>
-              <a className="list-group-item list-group-item-action">
+              <Link to={`/shop?mc=${mc}&sc=All&br=${br}`} className="list-group-item list-group-item-action">
                 All
-              </a>
+              </Link>
               {
                 subcategory.map((item,index)=>{
                   if(item.active)
-                  return <a href="#" key={index} class="list-group-item list-group-item-action">
+                  return <Link to={`/shop?mc=${mc}&sc=${item.name}&br=${br}`} key={index} className="list-group-item list-group-item-action">
                   {item.name}
-                </a>
+                </Link>
                 })
               }
               
@@ -110,15 +128,15 @@ export default function Shop() {
               >
                 Brand
               </p>
-              <a className="list-group-item list-group-item-action">
+              <Link to={`/shop?mc=All&sc=All&br=${br}`} className="list-group-item list-group-item-action">
                 All
-              </a>
+              </Link>
               {
                 brand.map((item,index)=>{
                   if(item.active)
-                  return <a href="#" key={index} class="list-group-item list-group-item-action">
+                  return <Link to={`/shop?mc=${mc}&sc=${sc}&br=${safe(item.name)}`} key={index} className="list-group-item list-group-item-action">
                   {item.name}
-                </a>
+                </Link>
                 })
               }
             </div>
