@@ -959,6 +959,37 @@ html {
 
 /*** Footer End ***/
 
+/*** SideBar ***/
+.sidebar {
+  background: #ffffff;
+}
+
+.sidebar-link {
+  border: none;
+  border-radius: 12px;
+  padding: 12px 16px;
+  color: #495057;
+  font-weight: 500;
+  transition: all 0.3s ease;
+}
+
+.sidebar-link i {
+  font-size: 16px;
+  width: 22px;
+}
+
+.sidebar-link:hover {
+  background: #f1f5ff;
+  color: #0d6efd;
+}
+
+.sidebar-link.active {
+  background: linear-gradient(135deg, #0d6efd, #3b82f6);
+  color: #fff;
+  box-shadow: 0 8px 20px rgba(13, 110, 253, 0.3);
+}
+
+
 
 /*** Product Container ***/
 
