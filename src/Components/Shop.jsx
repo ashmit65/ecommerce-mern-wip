@@ -35,8 +35,23 @@ export default function Shop() {
       let data = [] 
       if(mc==="All" && sc==="All" && br==="All")
         data = ProductStateData
-      else if (!mc==="All" && sc==="All" && br==="All")
+      else if (mc !=="All" && sc==="All" && br==="All")
         data = ProductStateData.filter(x=>x.maincategory===mc)
+      else if (mc ==="All" && sc!=="All" && br==="All")
+        data = ProductStateData.filter(x=>x.subcategory===mc)
+      else if (mc ==="All" && sc!=="All" && br!=="All")
+        data = ProductStateData.filter(x=>x.brand===mc)
+      else if (mc !=="All" && sc==="All" && br==="All")
+        data = ProductStateData.filter(x=>x.maincategory===mc)
+      else if (mc !=="All" && sc!=="All" && br==="All")
+        data = ProductStateData.filter(x=>x.maincategory===mc && x.subcategory===sc)
+      else if (mc !=="All" && sc==="All" && br!=="All")
+        data = ProductStateData.filter(x=>x.maincategory===mc && x.brand === br)
+      else if (mc ==="All" && sc!=="All" && br!=="All")
+        data = ProductStateData.filter(x=>x.brand===mc && x.subcategory===sc)
+      else
+        data = ProductStateData.filter(x => x.brand===br && x.subcategory===sc)
+      setProducts(data)
   }
 
   useEffect(() => {
@@ -50,6 +65,7 @@ export default function Shop() {
     setMc(query.get("mc")??"All")
     setSc(query.get("sc")??"All")
     setBr(query.get("br")??"All")
+    filterData(query.get("mc")??"All", query.get("sc")??"All", query.get("br")??"All")
     // console.log(query.get("mc"),query.get("sc"),query.get("br"))
   },[location])
 
