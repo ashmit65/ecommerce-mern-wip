@@ -31,27 +31,14 @@ export default function Shop() {
   let SubcategoryStateData = useSelector((state) => state.SubcategoryStateData);
   let BrandStateData = useSelector((state) => state.BrandStateData);
 
-  function filterData(mc,sc,br){
-      let data = [] 
-      if(mc==="All" && sc==="All" && br==="All")
-        data = ProductStateData
-      else if (mc !=="All" && sc==="All" && br==="All")
-        data = ProductStateData.filter(x=>x.maincategory===mc)
-      else if (mc ==="All" && sc!=="All" && br==="All")
-        data = ProductStateData.filter(x=>x.subcategory===mc)
-      else if (mc ==="All" && sc!=="All" && br!=="All")
-        data = ProductStateData.filter(x=>x.brand===mc)
-      else if (mc !=="All" && sc==="All" && br==="All")
-        data = ProductStateData.filter(x=>x.maincategory===mc)
-      else if (mc !=="All" && sc!=="All" && br==="All")
-        data = ProductStateData.filter(x=>x.maincategory===mc && x.subcategory===sc)
-      else if (mc !=="All" && sc==="All" && br!=="All")
-        data = ProductStateData.filter(x=>x.maincategory===mc && x.brand === br)
-      else if (mc ==="All" && sc!=="All" && br!=="All")
-        data = ProductStateData.filter(x=>x.brand===mc && x.subcategory===sc)
-      else
-        data = ProductStateData.filter(x => x.brand===br && x.subcategory===sc)
-      setProducts(data)
+  function filterData(mc, sc, br) {
+    const data = ProductStateData.filter(x =>
+      (mc === "All" || x.maincategory === mc) &&
+      (sc === "All" || x.subcategory === sc) &&
+      (br === "All" || x.brand === br)
+    );
+  
+    setProducts(data);
   }
 
   useEffect(() => {
