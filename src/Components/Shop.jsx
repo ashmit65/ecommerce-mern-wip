@@ -15,10 +15,13 @@ export default function Shop() {
   let [maincategory, setMaincategory] = useState([]);
   let [subcategory, setSubcategory] = useState([]);
   let [brand, setBrand] = useState([]);
+  let [flag, setFlag] = useState(false)
 
   let [mc, setMc] = useState("All");
   let [sc, setSc] = useState("All");
   let [br, setBr] = useState("All");
+  let [min, setMin] = useState(0);
+  let [max, setMax] = useState(0);
 
   let location = useLocation();
   const safe = (v) => encodeURIComponent(v);
@@ -31,14 +34,32 @@ export default function Shop() {
   let SubcategoryStateData = useSelector((state) => state.SubcategoryStateData);
   let BrandStateData = useSelector((state) => state.BrandStateData);
 
-  function filterData(mc, sc, br) {
-    const data = ProductStateData.filter(x =>
+  function filterData(mc, sc, br, min=-1, max = -1) {
+    let data = ProductStateData.filter(x =>
       (mc === "All" || x.maincategory === mc) &&
       (sc === "All" || x.subcategory === sc) &&
       (br === "All" || x.brand === br)
     );
-  
+    if(min!==-1 && max!==-1){
+      data = data.filter((x)=>x.finalPrice>=min && x.finalPrice<=max)
+    }
     setProducts(data);
+  }
+
+  function sortFilter(option){
+    if(option==="1"){
+      setProducts(products.sort((x,y)=>y.id.localeCompare(x.id)))
+    }else if(option==="2"){
+      setProducts(products.sort((x,y)=>y.finalPrice - x.finalPrice))
+    }else{
+      setProducts(products.sort((x,y)=>x.finalPrice - y.finalPrice))
+    }
+    setFlag(!flag)
+  }
+  
+  function priceFilter(e){
+      e.preventDefault()
+      filterData(mc,sc,br,min, max)
   }
 
   useEffect(() => {
@@ -54,7 +75,7 @@ export default function Shop() {
     setBr(query.get("br")??"All")
     filterData(query.get("mc")??"All", query.get("sc")??"All", query.get("br")??"All")
     // console.log(query.get("mc"),query.get("sc"),query.get("br"))
-  },[location])
+  },[location, ProductStateData])
 
   useEffect(() => {
     (() => {
@@ -83,7 +104,7 @@ export default function Shop() {
 
       <div className="container-fluid my-2">
         <div className="row">
-          <div className="col-md-2 my-5">
+          <div className="col-md-2 my-5" >
             <div className="list-group mb-3">
               <p
                 className="list-group-item list-group-item-action active"
@@ -146,14 +167,14 @@ export default function Shop() {
 
               <div className="mb-3">
                 <h5 className="bg-primary text-center p-2 text-light rounded">Price Filter</h5>
-                <form action="">
+                <form onSubmit={priceFilter}>
                   <div className="mb-3">
                     <label>Min Amount</label>
-                    <input type="number" name="min" placeholder="Min Amount" className="form-control border-2 border-primary"/>
+                    <input type="number" onClick={(e)=>setMin(e.target.value)} name="min" placeholder="Min Amount" className="form-control border-2 border-primary"/>
                   </div>
                   <div className="mb-3">
                     <label>Max Amount</label>
-                    <input type="number" name="max" placeholder="Max Amount" className="form-control border-2 border-primary"/>
+                    <input type="number" name="max" onClick={(e)=>setMax(e.target.value)} placeholder="Max Amount" className="form-control border-2 border-primary"/>
                   </div>
                   <button type="submit" className="btn btn-primary w-100">Submit</button>
                 </form>
@@ -171,10 +192,10 @@ export default function Shop() {
                 </form>
               </div>
               <div className="col-md-4">
-                <select name="" className="form-control border-primary border-2" >
+                <select name="sort" onChange={(e)=>sortFilter(e)} className="form-control border-primary border-2" >
                   <option value="1">Latest</option>
                   <option value="2">Price : High to Low</option>
-                  <option value="2">Price : Low to High</option>
+                  <option value="3">Price : Low to High</option>
                 </select>
               </div>
             </div>
